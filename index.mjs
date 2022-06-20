@@ -8,13 +8,22 @@ class LinkedList {
     this.length = 1;
   }
   append(value) {
-    const next = {
+    const newTail = {
       value,
       next: null
     }
 
-    this.tail.next = next;
-    this.tail = next;
+    this.tail.next = newTail;
+    this.tail = newTail;
+    this.length++;
+  }
+  prepend(value) {
+    const newHead = {
+      value,
+      next: this.head
+    }
+
+    this.head = newHead;
     this.length++;
   }
 }
@@ -27,6 +36,11 @@ console.log(JSON.stringify(myLinkedList));
 
 myLinkedList.append(16);
 console.log(JSON.stringify(myLinkedList));
+
+myLinkedList.prepend(1);
+console.log(JSON.stringify(myLinkedList));
+
+
 
 
 
