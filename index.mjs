@@ -28,7 +28,11 @@ class LinkedList {
   }
   insert(index, value) {
     if (index < 1) {
-      throw new Error(`Use prepend instead`);
+      return this.prepend(value);
+    }
+
+    if (index >= this.length) {
+      return this.append(value);
     }
         
     let currentIndex = 0;
