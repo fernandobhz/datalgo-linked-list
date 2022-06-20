@@ -52,32 +52,35 @@ class LinkedList {
 
     previousNode.next = newNode;
   }
-  printList() {
+  printList(label = 0) {
     const array = [];
     let currentNode = this.head;
 
-    while(currentNode.next !== null) {
+    while (currentNode !== null) {
       array.push(currentNode.value);
       currentNode = currentNode.next;
     }
 
-    console.log(array.join(' > '));
+    console.log(label, array.join(' > '));
   }
 }
 // 1 > 10 > 5 > 16
 // 1 > 10 > 99 > 5 > 16
 
 let myLinkedList = new LinkedList(10);
-myLinkedList.printList();
+myLinkedList.printList(1);
 
 myLinkedList.append(5);
-myLinkedList.printList();
+myLinkedList.printList(2);
 
 myLinkedList.append(16);
-myLinkedList.printList();
+myLinkedList.printList(3);
 
 myLinkedList.prepend(1);
-myLinkedList.printList();
+myLinkedList.printList(4);
+
+myLinkedList.append(99);
+myLinkedList.printList(5);
 
 myLinkedList.insert(2, 99);
-myLinkedList.printList();
+myLinkedList.printList(6);
