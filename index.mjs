@@ -35,11 +35,11 @@ class LinkedList {
       return this.append(value);
     }
         
-    let currentIndex = 0;
     let previousNode = this.head;
     let currentNode = this.head.next;
+    let currentIndex = 1;
 
-    while(currentIndex < index - 1) {
+    while(currentIndex < index) {
       previousNode = currentNode;
       currentNode = currentNode.next;
       currentIndex++;
@@ -51,6 +51,28 @@ class LinkedList {
     }
 
     previousNode.next = newNode;
+  }
+  remove(index) {
+    if (index < 1) {
+      this.head = this.head.next;
+      return;
+    }
+
+    if (index >= this.length) {
+      throw new Error('index out of range');
+    }
+        
+    let previousNode = this.head;
+    let currentNode = this.head.next;
+    let currentIndex = 1;
+
+    while(currentIndex < index) {
+      previousNode = currentNode;
+      currentNode = currentNode.next;
+      currentIndex++;
+    }
+
+    previousNode.next = currentNode.next;
   }
   printList(label = 0) {
     const array = [];
@@ -84,3 +106,15 @@ myLinkedList.printList(5);
 
 myLinkedList.insert(2, 99);
 myLinkedList.printList(6);
+
+myLinkedList.insert(20, 88);
+myLinkedList.printList(7);
+
+myLinkedList.insert(0, -1);
+myLinkedList.printList(7);
+
+myLinkedList.remove(0);
+myLinkedList.printList(8);
+
+myLinkedList.remove(2);
+myLinkedList.printList(9);
