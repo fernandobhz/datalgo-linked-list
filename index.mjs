@@ -1,45 +1,95 @@
 class LinkedList {
-  constructor(value) {
+  constructor() {
     this.head = {
-      value: value,
-      next: null
+      value: null,
+      next: null,
     };
     this.tail = this.head;
-    this.length = 1;
+    this.length = 0;
   }
-  append(value) {
-    const newTail = {
-      value,
-      next: null
-    }
+  push(...values) {
+    const pushOne = (value) => {
+      const newTail = {
+        value,
+        next: null,
+      };
 
-    this.tail.next = newTail;
-    this.tail = newTail;
-    this.length++;
-  }
-  prepend(value) {
-    const newHead = {
-      value,
-      next: this.head
-    }
+      if (this.length === 0) {
+        this.head = newTail;
+        this.tail = newTail;
+        this.length++;
+        return;
+      }
 
-    this.head = newHead;
-    this.length++;
+      this.tail.next = newTail;
+      this.tail = newTail;
+      this.length++;
+    };
+
+    values.forEach(pushOne);
   }
-  insert(index, value) {
+  unshift(...values) {
+    const unshiftOne = (value) => {      
+      const newHead = {
+        value,
+        next: this.head,
+      };
+
+      if (this.length === 0) {
+        this.head = newHead;
+        this.tail = newHead;
+        this.length === 1;
+        return;
+      }
+
+      this.head = newHead;
+      this.length++;
+    };
+
+    values.forEach(unshiftOne);
+  }
+  itemAt(index) {
     if (index < 1) {
-      return this.prepend(value);
+      const { value: firstItem } = this.head;
+      return firstItem;
     }
 
     if (index >= this.length) {
-      return this.append(value);
+      return;
     }
-        
+
     let previousNode = this.head;
     let currentNode = this.head.next;
     let currentIndex = 1;
 
-    while(currentIndex < index) {
+    while (currentIndex < index) {
+      previousNode = currentNode;
+      currentNode = currentNode.next;
+      currentIndex++;
+    }
+
+    if (currentNode === null) {
+      return;
+    }
+
+    const { value: item } = currentNode;
+    return item;
+  }
+  insertAt(index, value) {
+    if (index < 1) {
+      this.length++;
+      return this.unshift(value);
+    }
+
+    if (index >= this.length) {
+      return this.push(value);
+    }
+
+    let previousNode = this.head;
+    let currentNode = this.head.next;
+    let currentIndex = 1;
+
+    while (currentIndex < index) {
       previousNode = currentNode;
       currentNode = currentNode.next;
       currentIndex++;
@@ -47,32 +97,80 @@ class LinkedList {
 
     const newNode = {
       value,
-      next: currentNode
-    }
+      next: currentNode,
+    };
 
     previousNode.next = newNode;
+    this.length++;
   }
-  remove(index) {
-    if (index < 1) {
-      this.head = this.head.next;
+  shift() {
+    const { value: firstItem } = this.head;
+    this.removeAt(0);
+    return firstItem;
+  }
+  pop() {
+    if (this.length === 0 ) {
       return;
     }
 
-    if (index >= this.length) {
-      throw new Error('index out of range');
+    if (this.length === 1) {
+      const { value: onlyItem } = this.head;
+      this.head.value = null;
+      this.length = 0;
+      return onlyItem;
     }
-        
+
     let previousNode = this.head;
     let currentNode = this.head.next;
     let currentIndex = 1;
 
-    while(currentIndex < index) {
+    while (currentIndex < this.length - 1) {
+      previousNode = currentNode;
+      currentNode = currentNode.next;
+      currentIndex++;
+    }
+
+    if (currentNode === null) {
+      return;
+    }
+
+    const { value: lastItem } = currentNode;
+
+    previousNode.next = null;
+    this.length--;
+
+    this.tail = previousNode;
+
+    return lastItem;
+  }
+  removeAt(index) {
+    if (index < 1) {
+      this.head = this.head.next;
+
+      if (this.length === 1) {
+        this.tail = this.head;
+      }
+
+      this.length--;
+      return;
+    }
+
+    if (index >= this.length) {
+      throw new Error("index out of range");
+    }
+
+    let previousNode = this.head;
+    let currentNode = this.head.next;
+    let currentIndex = 1;
+
+    while (currentIndex < index) {
       previousNode = currentNode;
       currentNode = currentNode.next;
       currentIndex++;
     }
 
     previousNode.next = currentNode.next;
+    this.length--;
   }
   printList(label = 0) {
     const array = [];
@@ -83,7 +181,7 @@ class LinkedList {
       currentNode = currentNode.next;
     }
 
-    console.log(label, array.join(' > '));
+    console.log(label, ': ', array.join(" > "));
   }
   reverse() {
     let a = this.head;
@@ -92,45 +190,49 @@ class LinkedList {
     while (b) {
       let c = b.next;
       b.next = a;
-      a=b;
-      b=c;
+      a = b;
+      b = c;
     }
     this.head.next = null;
     this.head = a;
   }
 }
-// 1 > 10 > 5 > 16
-// 1 > 10 > 99 > 5 > 16
 
-let myLinkedList = new LinkedList(10);
+const { log } = console;
+
+let myLinkedList = new LinkedList();
+myLinkedList.push(10)
 myLinkedList.printList(1);
 
-myLinkedList.append(5);
+myLinkedList.push(5);
 myLinkedList.printList(2);
 
-myLinkedList.append(16);
+myLinkedList.push(16, 1666);
 myLinkedList.printList(3);
 
-myLinkedList.prepend(1);
+log(myLinkedList.shift());
 myLinkedList.printList(4);
 
-myLinkedList.append(99);
-myLinkedList.printList(5);
+log('---');
+log(myLinkedList.pop());
+log('size: ', myLinkedList.length, myLinkedList.head, myLinkedList.tail);
 
-myLinkedList.insert(2, 99);
-myLinkedList.printList(6);
+log('---');
+log(myLinkedList.pop());
+log('size: ', myLinkedList.length, myLinkedList.head, myLinkedList.tail);
 
-myLinkedList.insert(20, 88);
-myLinkedList.printList(7);
+log('---');
+log(myLinkedList.pop());
+log('size: ', myLinkedList.length, myLinkedList.head, myLinkedList.tail);
 
-myLinkedList.insert(0, -1);
-myLinkedList.printList(8);
+log('---');
+log(myLinkedList.pop());
+log('size: ', myLinkedList.length, myLinkedList.head, myLinkedList.tail);
 
-myLinkedList.remove(0);
-myLinkedList.printList(9);
+log('---');
+myLinkedList.push(1);
+log('size: ', myLinkedList.length, myLinkedList.head, myLinkedList.tail);
 
-myLinkedList.remove(2);
-myLinkedList.printList(10);
-
-myLinkedList.reverse();
-myLinkedList.printList(11);
+log('---');
+myLinkedList.push(2);
+log('size: ', myLinkedList.length, myLinkedList.head, myLinkedList.tail);
